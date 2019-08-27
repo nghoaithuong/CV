@@ -12,8 +12,9 @@ from keras.preprocessing.image import img_to_array, load_img
 
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib
 
-#%matplotlib inline
+
 import seaborn as sns
 
 import cv2
@@ -23,12 +24,13 @@ import gc
 import random
 import pandas as pd
 
-train_dir = '/home/hoaithuong/PycharmProjects/detect_tomato/Train_Tomato'
-test_dir = '/home/hoaithuong/PycharmProjects/detect_tomato/Test_Tomato'
+train_dir = '/home/hoaithuong/CV/detect_tomato/Train_Tomato'
+test_dir = '/home/hoaithuong/CV/detect_tomato/Test_Tomato'
 
-train_images = ['/home/hoaithuong/PycharmProjects/detect_tomato/Train_Tomato/{}'.format(i) for i in os.listdir(train_dir)]
-test_images = ['/home/hoaithuong/PycharmProjects/detect_tomato/Test_Tomato/{}'.format(i) for i in os.listdir(test_dir)]
+train_images = ['/home/hoaithuong/CV/detect_tomato/Train_Tomato/{}'.format(i) for i in os.listdir(train_dir)]
+test_images = ['/home/hoaithuong/CV/detect_tomato/Test_Tomato/{}'.format(i) for i in os.listdir(test_dir)]
 
+print(len(train_images))
 name = ['tomato']
 random.shuffle(train_images)
 gc.collect()
@@ -36,30 +38,36 @@ gc.collect()
 import matplotlib.image as mpimg
 for ima in train_images[0:5]:
     img= mpimg.imread(ima)
-#plt.imshow(img)
-#plt.show()
+    plt.imshow(img)
+    plt.show()
 nrows = 50
 ncolumns = 50
-channels =4
-def read_and_process_image(list_of_imgs):
+channels = 3
+def read_and_process_image(list_of_images):
     x=[] #images
-    y=[]  #labels
-    for image in list_of_imgs:
-        x.append(cv2.resize(cv2.imread(image,cv2.IMREAD_COLOR),(nrows, ncolumns), interpolation=cv2.INTER_CUBIC))
+    y=[]  #labelsqqqq
+    for image in list_of_images:
+        z=cv2.imread(image)
+        z=cv2.cvtColor(z, cv2.COLOR_BGR2RGB)
+        z=cv2.resize(z,(nrows, ncolumns))
+        x.append(z)
         if 'tomato' in image:
             y.append(1)
+        elif ' not tomato' in image:
+            y.append(0)
     return x,y
 x,y = read_and_process_image(train_images)
-print(x[0])
+#print(x[0]) 
 print(y)
 #print(x.shape)
 #Show 5 image
 plt.figure(figsize=(20,10))
 columns=5
 for i in range(columns):
-    plt.subplot(5/columns+1,columns, i+1)
+    plt.subplot(5/columns+1, columns, i+1)
     plt.imshow(x[i])
     plt.show()
+
 del train_images
 gc.collect()
 x=np.array(x)
@@ -109,19 +117,19 @@ loss = history.history['loss']
 
 epochs = range(1, len(acc) + 1)
 
-#Train and validation accuracy
+#Train accuracy
 plt.plot(epochs, acc, 'b', label='Training accurarcy')
-plt.title('Training and Validation accurarcy')
+plt.title('Training accurarcy')
 plt.legend()
 
 plt.figure()
-#Train and validation loss
+#Train loss
 plt.plot(epochs, loss, 'b', label='Training loss')
 plt.title('Training loss')
 plt.legend()
 plt.show()
 
-x_test, y_test = read_and_process_image(test_images[0:10]) #Y_test in this case will be empty.
+x_test, y_test = read_and_process_image(test_images[0:5])
 X = np.array(x_test)
 test_datagen = ImageDataGenerator(rescale=1./255)
 i = 0
@@ -135,6 +143,6 @@ for batch in test_datagen.flow(x, batch_size=1):
     plt.title('This is a ' + text_labels[i])
     imgplot = plt.imshow(batch[0])
     i += 1
-    if i % 10 == 0:
+    if i % 5 == 0:
         break
 plt.show()
