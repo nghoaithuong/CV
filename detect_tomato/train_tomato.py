@@ -7,9 +7,6 @@ from keras import Sequential
 from keras.layers import Dense, Dropout, LSTM, BatchNormalization
 from keras.preprocessing.image import ImageDataGenerator
 from keras.preprocessing.image import img_to_array, load_img
-
-
-
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib
@@ -77,8 +74,9 @@ plt.title('labels for tomato ')
 print(x.shape)
 print(y.shape)
 ntrain=len(x)
-batch_size=32
-#setup the layers
+#batch_size=32
+#setup the layersq
+
 model = keras.Sequential(
     [
         #keras.layers.Flatten(input_shape=(50, 50, 3)),
@@ -96,6 +94,7 @@ model = keras.Sequential(
         keras.layers.Dense(1, activation='sigmoid')
     ]
 )
+
 rms= keras.optimizers.RMSprop(lr=1e-4)
 model.compile(optimizer=rms, loss='binary_crossentropy', metrics=['acc'])
 
@@ -106,7 +105,7 @@ train_datagen = ImageDataGenerator( rescale=1./255,
                                     shear_range=0.2,
                                     zoom_range=0.2,
                                     horizontal_flip=True,)
-train_generator = train_datagen.flow(x, y, batch_size= batch_size)
+train_generator = train_datagen.flow(x, y)
 history = model.fit_generator(train_generator,
                               steps_per_epoch=ntrain,
                               epochs=5)
@@ -135,7 +134,7 @@ test_datagen = ImageDataGenerator(rescale=1./255)
 i = 0
 text_labels = []
 plt.figure(figsize=(30,20))
-for batch in test_datagen.flow(x, batch_size=1):
+for batch in test_datagen.flow(X, batch_size=1):
     pred = model.predict(batch)
     if pred > 0.5:
         text_labels.append('tomato')

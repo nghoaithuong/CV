@@ -2,10 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="39848602-5bfc-41d7-95af-b66b566bf893" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/model_keras.h5" beforeDir="false" afterPath="$PROJECT_DIR$/model_keras.h5" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/train.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model_weights.h5" beforeDir="false" afterPath="$PROJECT_DIR$/model_weights.h5" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/train_tomato.py" beforeDir="false" afterPath="$PROJECT_DIR$/train_tomato.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -28,7 +27,7 @@
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../detect_banana" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
