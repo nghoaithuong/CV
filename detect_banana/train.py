@@ -13,7 +13,6 @@ from keras.preprocessing.image import img_to_array, load_img
 
 import numpy as np
 import matplotlib.pyplot as plt
-import matplotlib
 
 
 import seaborn as sns
@@ -23,15 +22,15 @@ import glob
 import os
 import gc
 import random
-import pandas as pd
 
 train_dir = '/home/hoaithuong/CV/detect_banana/Train_Banana'
-test_dir = '/home/hoaithuong/CV/detect_banana/Test_Banana'
+test_dir = '/home/hoaithuong/CV/detect_banana/Test_Banana1'
 
 train_images = ['/home/hoaithuong/CV/detect_banana/Train_Banana/{}'.format(i) for i in os.listdir(train_dir)]
-test_images = ['/home/hoaithuong/CV/detect_banana/Train_Banana/{}'.format(i) for i in os.listdir(test_dir)]
+test_images = ['/home/hoaithuong/CV/detect_banana/Test_Banana1/{}'.format(i) for i in os.listdir(test_dir)]
 
 print(len(train_images))
+print(len(test_images))
 name = ['banana']
 random.shuffle(train_images)
 gc.collect()
@@ -49,7 +48,7 @@ def read_and_process_image(list_of_images):
     y=[]  #labelsqqqq
     for image in list_of_images:
         z=cv2.imread(image)
-        z=cv2.cvtColor(z, cv2.COLOR_BGR2RGB)
+        z=cv2.cvtColor(z,cv2.COLOR_BGR2RGB)
         z=cv2.resize(z,(nrows, ncolumns))
         x.append(z)
         if 'banana' in image:
@@ -67,7 +66,7 @@ columns=5
 for i in range(columns):
     plt.subplot(5/columns+1, columns, i+1)
     plt.imshow(x[i])
-   # plt.show()
+#plt.show()
 
 del train_images
 gc.collect()
@@ -110,7 +109,7 @@ train_datagen = ImageDataGenerator( rescale=1./255,
                                     horizontal_flip=True,)
 train_generator = train_datagen.flow(x, y, batch_size= batch_size)
 history = model.fit_generator(train_generator,
-                              steps_per_epoch=ntrain,
+                              steps_per_epoch=ntrain//32 ,
                               epochs=5)
 model.save_weights('model_weights.h5')
 model.save('model_keras.h5')
@@ -129,7 +128,13 @@ plt.figure()
 plt.plot(epochs, loss, 'b', label='Training loss')
 plt.title('Training loss')
 plt.legend()
-plt.show()
+#plt.show()
+
+#import matplotlib.image as mpimg
+#for im in test_images[0:1]:
+ #   img2= mpimg.imread(im)
+  #  plt.imshow(img2)
+   # plt.show()
 
 x_test, y_test = read_and_process_image(test_images[0:5])
 X = np.array(x_test)
@@ -139,10 +144,12 @@ text_labels = []
 plt.figure(figsize=(30,20))
 for batch in test_datagen.flow(X, batch_size=1):
     pred = model.predict(batch)
-    if pred > 0.5:
-        text_labels.append('banana ')
+    if pred > 0.9:
+        text_labels.append('a banana ')
+    else:
+        text_labels.append('not a banana')
     plt.subplot(5 / columns + 1, columns, i + 1)
-    plt.title('This is a ' + text_labels[i])
+    plt.title('This is  ' + text_labels[i])
     imgplot = plt.imshow(batch[0])
     i += 1
     if i % 5 == 0:
