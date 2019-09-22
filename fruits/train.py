@@ -42,7 +42,7 @@ import matplotlib.image as mpimg
 for ima in train_images[0:5]:
     img= mpimg.imread(ima)
     plt.imshow(img)
-    plt.show()
+   # plt.show()
 
 
 nrows = 50
@@ -71,7 +71,7 @@ columns=5
 for i in range(columns):
     plt.subplot(5/columns+1, columns, i+1)
     plt.imshow(x[i])
-plt.show()
+#plt.show()
 
 del train_images
 gc.collect()
