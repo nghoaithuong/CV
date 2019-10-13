@@ -1,8 +1,8 @@
 import tensorflow as tf
 from tensorflow import keras
-#import keras
+import keras
 from keras.preprocessing.image import ImageDataGenerator
-
+from tensorflow.python.keras.utils.data_utils import Sequence
 
 
 import numpy as np
@@ -17,13 +17,13 @@ import gc
 import random
 
 train_dir = '/home/hoaithuong/CV/detect_ba_ap/Train'
-
 test_dir = '/home/hoaithuong/CV/detect_ba_ap/Test_Banana1'
 
 train_bananas = ['/home/hoaithuong/CV/detect_ba_ap/Train/{}'.format(i) for i in os.listdir(train_dir) if 'banana' in i]
 train_apples = ['/home/hoaithuong/CV/detect_ba_ap/Train/{}'.format(i) for i in os.listdir(train_dir) if 'apple' in i]
-print(len(train_apples))
 test_images = ['/home/hoaithuong/CV/detect_ba_ap/Test_Banana1/{}'.format(i) for i in os.listdir(test_dir)]
+
+print(len(train_apples))
 
 train_images = train_bananas + train_apples
 random.shuffle(train_images)
@@ -34,7 +34,7 @@ import matplotlib.image as mpimg
 for ima in train_images[0:5]:
     img= mpimg.imread(ima)
     plt.imshow(img)
-plt.show()
+#plt.show()
 nrows = 50
 ncolumns = 50
 channels = 3
@@ -56,13 +56,14 @@ x,y = read_and_process_image(train_images)
 print(y)
 #print(x.shape)
 #Show 5 image
-plt.figure(figsize=(20,10))
+plt.figure(figsize=(10,10))
 columns=5
 for i in range(columns):
     plt.subplot(5/columns+1, columns, i+1)
-    plt.imshow(x[i])
+    plt.suptitle('Resize Image')
+    plt.grid(False)
+    plt.imshow(x[i], cmap=plt.cm.binary)
 plt.show()
-
 del train_images
 gc.collect()
 x=np.array(x)
@@ -122,7 +123,7 @@ plt.figure()
 plt.plot(epochs, loss, 'b', label='Training loss')
 plt.title('Training loss')
 plt.legend()
-#plt.show()
+plt.show()
 
 x_test, y_test = read_and_process_image(test_images[0:5])
 X = np.array(x_test)
@@ -132,6 +133,7 @@ text_labels = []
 plt.figure(figsize=(30,20))
 for batch in test_datagen.flow(X, batch_size=1):
     pred = model.predict(batch)
+    print(pred)
     if pred > 0.5:
         text_labels.append('a banana ')
     else:
@@ -144,4 +146,3 @@ for batch in test_datagen.flow(X, batch_size=1):
         break
 plt.show()
 
-#use cảmera to detect

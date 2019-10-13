@@ -51,7 +51,7 @@ print('\n Test accuracy:', test_acc)
 predictions = model.predict(test_images)
 
 # Look at the full set of 10 class predictions
-def plot_image(i, predictions_array, true_label, img):
+eddef plot_image(i, predictions_array, true_label, img):
     prediction_array, true_label, img = predictions_array, true_label[i], img[i]
     plt.grid(False)
     plt.xticks([])
