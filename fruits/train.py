@@ -30,6 +30,7 @@ print(len(train_plums))
 
 test_images = ['/home/hoaithuong/PycharmProjects/fruits/test/{}'.format(i) for i in os.listdir(test_dir)]
 train_images = train_apples + train_bananas + train_plums
+
 print(len(train_images))
 random.shuffle(train_images)
 
@@ -96,14 +97,14 @@ model = keras.Sequential(
         keras.layers.MaxPooling2D((2,2)),
         keras.layers.Flatten(),
         keras.layers.Dropout(0.5),
-        keras.layers.Dense(128, activation='relu'),
+        keras.layers.Dense(512, activation='relu'),
         keras.layers.Dense(3, activation='softmax')
     ]
 )
 #rms= keras.optimizers.RMSprop(lr=1e-4)
 model.compile(optimizer= 'adam', loss='sparse_categorical_crossentropy', metrics=['acc'])
 
-train_datagen = ImageDataGenerator( rescale=1./255,
+train_datagen = ImageDataGenerator( rescale=1./255.0,
                                     rotation_range=40,
                                     width_shift_range=0.2,
                                     height_shift_range=0.2,
@@ -113,7 +114,7 @@ train_datagen = ImageDataGenerator( rescale=1./255,
 train_generator = train_datagen.flow(x, y, batch_size= batch_size)
 history = model.fit_generator(train_generator,
                steps_per_epoch=ntrain//10,
-                epochs=10)
+                epochs=5)
 model.save_weights('model_weights.h5')
 model.save('model_keras.h5')
 acc = history.history['acc']
@@ -136,18 +137,15 @@ plt.show()
 
 #make predictions
 #x_test, y_test = read_and_process_image(test_images[0:1])
-x_test, y_test = read_and_process_image(test_images[0:6])
+x_test, y_test = read_and_process_image(test_images[0:9])
 print(y_test)
 #sys.exit()
-plt.show()
 X = np.array(x_test)
+X= X/255.0
 test_datagen = ImageDataGenerator(rescale=1./255)
-i = 0
-text_labels = []
-plt.figure(figsize=(30,20))
 #for batch in test_datagen.flow(X, batch_size=1):
-x= test_datagen.flow(X, batch_size=1)
-prediction = model.predict(x)
+prediction = model.predict(X)
+print(prediction)
 #pred=np.round(prediction)
 #pred=pred.astype(int)
 #pred = np.array(pred)
@@ -163,6 +161,9 @@ def plot_image(i, predictions_array, true_label, img):
     plt.yticks([])
     plt.imshow(img, cmap=plt.cm.binary)
     predict_label = np.argmax(predictions_array)
+    print(predict_label)
+    print(true_label)
+    print(predictions_array)
     if predict_label == true_label:
         color='blue'
     else:
@@ -186,15 +187,15 @@ def plot_value_array(i, predictions_array, true_label):
 
 
 #plot several images with their predictions
-num_rows=2
+num_rows=3
 num_cols=3
 num_images=num_rows*num_cols
 plt.figure(figsize=(2*2*num_cols, 2*num_rows))
 for i in range(num_images):
     plt.subplot(num_rows, 2*num_cols, 2*i+1)
-    plot_image(i, pred[i], y, X)
+    plot_image(i, pred[i], y_test, X)
     plt.subplot(num_rows, 2*num_cols, 2*i+2)
-    plot_value_array(i, pred[i], y)
+    plot_value_array(i, pred[i], y_test)
     plt.tight_layout()
 plt.show()
 
@@ -202,7 +203,7 @@ img = x_test[1]
 img = (np.expand_dims(img,0))
 predictions_single = model.predict(img)
 print(predictions_single)
-plot_value_array(1, predictions_single[0], y)
+plot_value_array(1, predictions_single[0], y_test)
 _= plt.xticks(range(10), class_names, rotation=45)
 
 
