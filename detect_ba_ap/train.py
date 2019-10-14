@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 
 
 import seaborn as sns
-
+import sys
 import cv2
 import os
 import gc
@@ -126,6 +126,8 @@ plt.legend()
 plt.show()
 
 x_test, y_test = read_and_process_image(test_images[0:5])
+print(y_test)
+sys.exit()
 X = np.array(x_test)
 test_datagen = ImageDataGenerator(rescale=1./255)
 i = 0
